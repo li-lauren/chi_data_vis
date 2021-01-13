@@ -47,10 +47,11 @@
             urin_tix.selectAll("path")
                 .data(urin_recs.features)
                 .enter()
-                .append( "path" )
-                .attr( "fill", "#900" )
-                .attr( "stroke", "#999" )
-                .attr( "d", geoPath );
+                .append("path")
+                .attr("fill","#900")
+                .attr("stroke","#999")
+                .attr("d", geoPath)
+                .attr("class", "ticket");
 
         })
     </script>
