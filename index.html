@@ -71,13 +71,13 @@
                 .attr("d", geoPath)
                 .attr("class", "ticket")
                 .on("mouseover", function(d) {
-                    console.log(d.properties.NOV_DATE)
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", 0.9)
                         .style("left", d3.event.pageX + "px")
                         .style("top", d3.event.pageY + 10 + "px")
-                    tooltip.html(d.properties.NOV_DATE)
+                    let address = d.properties.STR_ADDRESS
+                    tooltip.html(address.substring(1,address.length-1))
                 })
                 .on("mouseout", function(d) {
                     tooltip.transition()
