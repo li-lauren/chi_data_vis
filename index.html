@@ -3,14 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chicago Urination Records</title>
+    <title>Document</title>
     <script src="https://d3js.org/d3.v5.js"></script>
-    <script src="chi_comm_areas.geojson"></script>
 </head>
 <body>
     <script>
-        // D3 code
+        d3.json("chi_comm_areas.geojson").then(function(map) {
+            let width = 800;
+            let height = 800;
 
+            let svg = d3.select("body")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            let proj = d3.geoAlbers()
+                .fitSize([width, height], map)
+                
+            let geoPath = d3.geoPath().projection(proj);
+
+            const g = svg.append("g");
+
+            g.selectAll('path')
+                .data(map.features)
+                .join('path')
+                .attr('d', geoPath)
+                .attr('fill', '#088')
+                .attr('stroke', '#000'); 
+        })
     </script>
+    
 </body>
 </html>
