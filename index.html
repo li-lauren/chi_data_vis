@@ -8,7 +8,19 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
+    <div>
+        <input id="slide" type="range" min="1" max="6" value="0" step="1">
+        <br>
+        <span id="time-label">Jan 2019</span>
+    </div>
+
     <script>
+        // Define variables for time slider
+        let timeSelection = null;
+        let timeOpts = ["Jan 2019", "Feb 2019", "Mar 2019", "Apr 2019",
+            "May 2019", "Jun 2019"];
+        let timeVal = null;
+        
         // Append SVG
         let width = 800;
         let height = 800;
@@ -20,8 +32,7 @@
 
 
         // Load Map and Public Urination JSON
-        Promise.all([d3.json("data/chi_comm_areas.geojson"), 
-            d3.json("data/chicago_public_urination.json")])
+        Promise.all([d3.json("data/chi_comm_areas.geojson"), d3.json("data/chicago_public_urination.json")])
         .then(function(data) {
             let map = data[0];
             let urin_recs = data[1];
@@ -48,11 +59,54 @@
                 .data(urin_recs.features)
                 .enter()
                 .append("path")
-                .attr("fill","#900")
+                .attr("fill", initFill)
                 .attr("stroke","#999")
                 .attr("d", geoPath)
                 .attr("class", "ticket");
 
+            // Update ticket color in response to time slide
+            d3.select("#slide").on("input", function() {
+                updateFill(this.value);
+            })
+
+            function updateFill (val) {
+                console.log(val)
+                console.log(timeOpts[val])
+                document.getElementById("time-label").innerHTML=timeOpts[val-1];
+                timeSelection = timeOpts[val];
+                timeVal = val;
+                d3.selectAll(".ticket")
+                    .attr("fill", getColor);
+            }
+
+            // Check if ticket issue date matches slider input, if so, assign a diff color
+            function getColor(data, val) {
+                // get ticket issue date from JSON
+                let month = data.properties.NOV_DATE[0];
+                
+                if ( timeVal == parseInt(month)) {
+                    // helps make matches always appear in top layer
+                    if (this.parentElement != null) {
+                        this.parentElement.appendChild(this); 
+                        return "red";
+                    }
+                } else {
+                    return "#999";
+                };
+            }
+
+            // Set initial ticket fill (start with Jan 2019)
+            function initFill (data, i) {
+                let month = data.properties.NOV_DATE[0];
+
+                // 1 -> Jan 2019
+                if (parseInt(month) === 1) {
+                    this.parentElement.appendChild(this);
+                    return "red";
+                } else {
+                    return "#999";
+                };
+            }
         })
     </script>
     
