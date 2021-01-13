@@ -1,15 +1,16 @@
 import json
 
 id = 1
+
+notice_data = {
+        "type": "FeatureCollection",
+
+        "features": []
+    }
+
 for csv_file in ['data/chicago_public_urination.csv', 'data/chicago_public_urination_2.csv']:
     with open(csv_file, 'r') as f:
         lines = f.readlines()[1:]
-
-        notice_data = {
-            "type": "FeatureCollection",
-
-            "features": []
-        }
 
         for line in lines:
             line_s = line.split(",")

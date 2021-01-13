@@ -11,17 +11,19 @@
     <!-- Slider -->
     <h3>Chicago Public Urination Tickets</h3>
     <div>
-        <input id="slide" type="range" min="1" max="6" value="0" step="1">
+        <input id="slide" type="range" min="1" max="18" value="0" step="1">
         <br>
         <span id="time-label">Jan 2019</span>
     </div>
 
     <script>
         // Define variables for time slider
-        let timeSelection = null;
         let timeOpts = ["Jan 2019", "Feb 2019", "Mar 2019", "Apr 2019",
-            "May 2019", "Jun 2019"];
-        let timeVal = null;
+            "May 2019", "Jun 2019", "Jul 2019", "Aug 2019", "Sep 2019",
+            "Oct 2019", "Nov 2019", "Dec 2019", "Jan 2020", "Mar 2020", 
+            "Apr 2020", "May 2020", "Jun 2020", "Jul 2020"];
+        let timeValMonth = null;
+        let timeValYr = null
         
         // Append SVG
         let width = 800;
@@ -92,10 +94,16 @@
 
             function updateFill (val) {
                 console.log(val)
-                console.log(timeOpts[val])
+                console.log(timeOpts[val-1])
                 document.getElementById("time-label").innerHTML=timeOpts[val-1];
-                timeSelection = timeOpts[val];
-                timeVal = val;
+                
+                if (val > 12) {
+                    timeValYr = 2020;
+                    timeValMonth = val % 12;
+                } else {
+                    timeValYr = 2019;
+                    timeValMonth = val;
+                }
                 d3.selectAll(".ticket")
                     .attr("fill", getColor);
             }
@@ -103,12 +111,14 @@
             // Check if ticket issue date matches slider input, if so, assign a diff color
             function getColor(data, val) {
                 // get ticket issue date from JSON
-                let month = data.properties.NOV_DATE[0];
+                let month = data.properties.NOV_DATE.split('/')[0];
+                let yr = data.properties.NOV_DATE.slice(-4);
                 
-                if ( timeVal == parseInt(month)) {
+                if ( timeValMonth == month && timeValYr == yr) {
                     // helps make matches always appear in top layer
                     if (this.parentElement != null) {
-                        this.parentElement.appendChild(this); 
+                        this.parentElement.appendChild(this);
+                        console.log(month, yr) 
                         return "red";
                     }
                 } else {
@@ -118,10 +128,12 @@
 
             // Set initial ticket fill (start with Jan 2019)
             function initFill (data, i) {
-                let month = data.properties.NOV_DATE[0];
+                let month = data.properties.NOV_DATE[0].split('/')[0];
+                let yr = data.properties.NOV_DATE.slice(-4);
 
                 // 1 -> Jan 2019
-                if (parseInt(month) === 1) {
+                if (month == 1 && yr == '2019') {
+                    console.log(month, yr) 
                     this.parentElement.appendChild(this);
                     return "red";
                 } else {
