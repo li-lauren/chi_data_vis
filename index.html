@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
+    <!-- Slider -->
+    <h3>Chicago Public Urination Tickets</h3>
     <div>
         <input id="slide" type="range" min="1" max="6" value="0" step="1">
         <br>
@@ -30,7 +32,12 @@
             .attr("width", width)
             .attr("height", height);
 
-
+        // Add DIV for tooltip
+        let tooltip = d3.select("body")
+            .append("div")
+            .style("opacity", 0)
+            .attr("class", "tooltip")
+        
         // Load Map and Public Urination JSON
         Promise.all([d3.json("data/chi_comm_areas.geojson"), d3.json("data/chicago_public_urination.json")])
         .then(function(data) {
@@ -62,7 +69,21 @@
                 .attr("fill", initFill)
                 .attr("stroke","#999")
                 .attr("d", geoPath)
-                .attr("class", "ticket");
+                .attr("class", "ticket")
+                .on("mouseover", function(d) {
+                    console.log(d.properties.NOV_DATE)
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", 0.9)
+                        .style("left", d3.event.pageX + "px")
+                        .style("top", d3.event.pageY + 10 + "px")
+                    tooltip.html(d.properties.NOV_DATE)
+                })
+                .on("mouseout", function(d) {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
 
             // Update ticket color in response to time slide
             d3.select("#slide").on("input", function() {
