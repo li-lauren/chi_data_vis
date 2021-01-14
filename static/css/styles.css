@@ -31,14 +31,14 @@ body {
 /* Ticket Counter */
 
 .ticket-count-box {
-    border: red 1px solid;
+    border: #c4b6b6 2px solid;
     opacity: 0.6;
     padding-top: 4px;
 }
 
 .ticket-count-label {
     width: 100%;
-    border-bottom: red 1px solid;
+    border-bottom: #c4b6b6 2px solid;
     padding-left: 4px;
     padding-right: 4px;
 }
@@ -58,6 +58,7 @@ body {
 
 .ticket-count-label {
     font-size: 14px;
+    font-weight: 700;
 }
 
 #ticket-count-2019, #ticket-count-2020{
