@@ -35,6 +35,18 @@ body {
 
 }
 
+#ticket-count-2019 {
+    position: absolute;
+    top: 250px;
+    left: 630px;
+}
+
+#ticket-count-2020 {
+    position: absolute;
+    top: 250px;
+    left: 1240px;
+}
+
 #map-container {
     display: flex;
 }

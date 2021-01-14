@@ -25,12 +25,12 @@
                 <p>Jun</p>
                 <p>Jul</p>
             </div>
-            <!-- <br>
-            <span id="time-label">January</span> -->
         </div>
 
         <!-- Map Containers -->
         <div id="map-container">
+            <p id="ticket-count-2019"></p>
+            <p id="ticket-count-2020"></p>
             <div id="map-2019">
                 <span class="year-label">2019</span>
             </div>
@@ -48,6 +48,10 @@
         // Define variables for time slider
         let timeOpts = ["January","February","March","April","May","June", "July"];
         let timeValMonth = null;
+
+        // Ticket counts per month (derived from calc.py)
+        const counts2019 = {'1': 286, '2': 280, '3': 471, '4': 401, '5': 466, '6': 479, '7': 366}
+        const counts2020 = {'1': 278, '2': 294, '3': 219, '4': 44, '5': 74, '6': 30, '7': 42}
         
         // Wrote drawMap as a reusable function to avoid repeating code for 
         // the two graphs
@@ -121,6 +125,8 @@
         // Update ticket color in response to time slide
         d3.select("#slide").on("mouseup", function() {
             updateFill(Math.round(this.value));
+            updateTicketCnts("ticket-count-2019", counts2019);
+            updateTicketCnts("ticket-count-2020", counts2020);
         })
 
         function updateFill (val) {
@@ -156,6 +162,12 @@
             } else {
                 return "#999";
             };
+        }
+
+        // Update ticket counts
+        function updateTicketCnts (id, countsObj) {
+            console.log(countsObj[timeValMonth])
+            document.getElementById(id).innerHTML=countsObj[timeValMonth];   
         }
 
         // Draw both 2019 and 2020 maps
