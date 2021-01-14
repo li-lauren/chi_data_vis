@@ -72,8 +72,7 @@
                     .data(map.features)
                     .join('path')
                     .attr('d', geoPath)
-                    .attr('fill', '#088')
-                    .attr('stroke', '#000'); 
+                    .attr("class", "map") 
 
                 // Load Urination Records Data
                 let urin_tix = svg.append("g");
