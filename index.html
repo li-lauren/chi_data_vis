@@ -99,9 +99,7 @@
                     .attr("class", "ticket")
                     .on("mouseover", function(d) {
                         // tooltip for displaying address on hover
-                        tooltip.transition()
-                            .duration(200)
-                            .style("opacity", 0.9)
+                        tooltip.style("opacity", 0.9)
                             .style("left", d3.event.pageX + "px")
                             .style("top", d3.event.pageY + 10 + "px");
 
@@ -111,10 +109,8 @@
                         d3.select(this).attr("class", "ticket hover")
                     })
                     .on("mouseout", function(d) {
-                        tooltip.transition()
-                            .duration(500)
-                            .style("opacity", 0);
-                        d3.select(this).attr("class", "ticket")
+                        tooltip.style("opacity", 0);
+                        d3.select(this).attr("class", "ticket");
                     });
             });
         }
