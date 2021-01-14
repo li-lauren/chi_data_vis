@@ -11,136 +11,139 @@
     <!-- Slider -->
     <h3>Chicago Public Urination Tickets</h3>
     <div>
-        <input id="slide" type="range" min="1" max="18" value="0" step="1">
+        <input id="slide" type="range" min="1" max="7" value="0" step="1">
         <br>
-        <span id="time-label">Jan 2019</span>
+        <span id="time-label">January</span>
     </div>
+
+    <!-- Maps -->
+    <div id="map-2019"></div>
+    <div id="map-2020"></div>
 
     <script>
         // Define variables for time slider
-        let timeOpts = ["Jan 2019", "Feb 2019", "Mar 2019", "Apr 2019",
-            "May 2019", "Jun 2019", "Jul 2019", "Aug 2019", "Sep 2019",
-            "Oct 2019", "Nov 2019", "Dec 2019", "Jan 2020", "Mar 2020", 
-            "Apr 2020", "May 2020", "Jun 2020", "Jul 2020"];
+        let timeOpts = ["January","February","March","April","May","June", "July"];
         let timeValMonth = null;
-        let timeValYr = null
         
-        // Append SVG
-        let width = 800;
-        let height = 800;
+        // Wrote drawMap as a reusable function to avoid repeating code for 
+        // the two graphs
+        function drawMap(dom, jsonPath) {
+            // Append SVG
+            let width = 600;
+            let height = 600;
 
-        let svg = d3.select("body")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height);
+            let svg = d3.select(dom)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
 
-        // Add DIV for tooltip
-        let tooltip = d3.select("body")
-            .append("div")
-            .style("opacity", 0)
-            .attr("class", "tooltip")
+            // Add DIV for tooltip
+            let tooltip = d3.select("body")
+                .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+            
+            
+            // Load Map and Public Urination JSON (2019)
+            Promise.all([d3.json("data/chi_comm_areas.geojson"), d3.json(jsonPath)])
+            .then(function(data) {
+                let map = data[0];
+                let urin_recs = data[1];
+
+                // Append Chicago Community Area Map
+                let proj = d3.geoAlbers()
+                    .fitSize([width, height], map)
+                    
+                let geoPath = d3.geoPath().projection(proj);
+
+                let g = svg.append("g");
+
+                g.selectAll('path')
+                    .data(map.features)
+                    .join('path')
+                    .attr('d', geoPath)
+                    .attr('fill', '#088')
+                    .attr('stroke', '#000'); 
+
+                // Load Urination Records Data
+                let urin_tix = svg.append("g");
+
+                urin_tix.selectAll("path")
+                    .data(urin_recs.features)
+                    .enter()
+                    .append("path")
+                    .attr("fill", initFill)
+                    .attr("stroke","#999")
+                    .attr("d", geoPath)
+                    .attr("class", "ticket")
+                    .on("mouseover", function(d) {
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", 0.9)
+                            .style("left", d3.event.pageX + "px")
+                            .style("top", d3.event.pageY + 10 + "px")
+                        let address = d.properties.STR_ADDRESS
+                        tooltip.html(address.substring(1,address.length-1))
+                    })
+                    .on("mouseout", function(d) {
+                        tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
+        }
+
         
-        // Load Map and Public Urination JSON
-        Promise.all([d3.json("data/chi_comm_areas.geojson"), d3.json("data/chicago_public_urination.json")])
-        .then(function(data) {
-            let map = data[0];
-            let urin_recs = data[1];
-
-            // Append Chicago Community Area Map
-            let proj = d3.geoAlbers()
-                .fitSize([width, height], map)
-                
-            let geoPath = d3.geoPath().projection(proj);
-
-            let g = svg.append("g");
-
-            g.selectAll('path')
-                .data(map.features)
-                .join('path')
-                .attr('d', geoPath)
-                .attr('fill', '#088')
-                .attr('stroke', '#000'); 
-
-            // Load Urination Records Data
-            let urin_tix = svg.append("g");
-
-            urin_tix.selectAll("path")
-                .data(urin_recs.features)
-                .enter()
-                .append("path")
-                .attr("fill", initFill)
-                .attr("stroke","#999")
-                .attr("d", geoPath)
-                .attr("class", "ticket")
-                .on("mouseover", function(d) {
-                    tooltip.transition()
-                        .duration(200)
-                        .style("opacity", 0.9)
-                        .style("left", d3.event.pageX + "px")
-                        .style("top", d3.event.pageY + 10 + "px")
-                    let address = d.properties.STR_ADDRESS
-                    tooltip.html(address.substring(1,address.length-1))
-                })
-                .on("mouseout", function(d) {
-                    tooltip.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
-
-            // Update ticket color in response to time slide
-            d3.select("#slide").on("input", function() {
-                updateFill(this.value);
-            })
-
-            function updateFill (val) {
-                console.log(val)
-                console.log(timeOpts[val-1])
-                document.getElementById("time-label").innerHTML=timeOpts[val-1];
-                
-                if (val > 12) {
-                    timeValYr = 2020;
-                    timeValMonth = val % 12;
-                } else {
-                    timeValYr = 2019;
-                    timeValMonth = val;
-                }
-                d3.selectAll(".ticket")
-                    .attr("fill", getColor);
-            }
-
-            // Check if ticket issue date matches slider input, if so, assign a diff color
-            function getColor(data, val) {
-                // get ticket issue date from JSON
-                let month = data.properties.NOV_DATE.split('/')[0];
-                let yr = data.properties.NOV_DATE.slice(-4);
-                
-                if ( timeValMonth == month && timeValYr == yr) {
-                    // helps make matches always appear in top layer
-                    if (this.parentElement != null) {
-                        this.parentElement.appendChild(this);
-                        console.log(month, yr) 
-                        return "red";
-                    }
-                } else {
-                    return "#999";
-                };
-            }
-
-            // Set initial ticket fill (start with Jan 2019)
-            function initFill (data, i) {
-                let month = data.properties.NOV_DATE[0].split('/')[0];
-                let yr = data.properties.NOV_DATE.slice(-4);
-
-                // 1 -> Jan 2019
-                if (month == 1 && yr == '2019') {
-                    console.log(month, yr) 
-                    this.parentElement.appendChild(this);
-                    return "red";
-                } else {
-                    return "#999";
-                };
-            }
+        // Update ticket color in response to time slide
+        d3.select("#slide").on("input", function() {
+            updateFill(this.value);
         })
+
+        function updateFill (val) {
+            console.log(val)
+            console.log(timeOpts[val-1])
+            document.getElementById("time-label").innerHTML=timeOpts[val-1];
+            
+            timeValMonth = val;
+            d3.selectAll(".ticket")
+                .attr("fill", getColor);
+        }
+
+        // Check if ticket issue date matches slider input, if so, assign a diff color
+        function getColor(data, val) {
+            // get ticket issue date from JSON
+            let month = data.properties.NOV_DATE.split('/')[0];
+            
+            if ( timeValMonth == month) {
+                // helps make matches always appear in top layer
+                if (this.parentElement != null) {
+                    this.parentElement.appendChild(this);
+                    console.log(month) 
+                    return "red";
+                }
+            } else {
+                return "#999";
+            };
+        }
+
+        // Set initial ticket fill (start with Jan 2019)
+        function initFill (data, i) {
+            let month = data.properties.NOV_DATE[0].split('/')[0];
+
+            // 1 -> Jan 2019
+            if (month == 1) {
+                console.log(month) 
+                this.parentElement.appendChild(this);
+                return "red";
+            } else {
+                return "#999";
+            };
+        }
+
+        // Draw both 2019 and 2020 maps
+        drawMap('#map-2019', 'data/urin_rec_2019.json');
+        drawMap('#map-2020', 'data/urin_rec_2020.json');
+        
     </script>
     
 </body>
