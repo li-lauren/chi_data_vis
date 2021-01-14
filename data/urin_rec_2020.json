@@ -18639,63 +18639,6 @@
                     "41.879288"
                 ]
             }
-        },
-        {
-            "type": "Feature",
-            "id": 3909,
-            "properties": {
-                "NOV_DATE": "8/2/2020",
-                "NOV_NUM": "P005939330",
-                "STR_ADDRESS": "\"100 N STATE \"",
-                "DESC": "\"8-4-081(a)     Public Urination\"",
-                "LATITUDE": "41.880537",
-                "LONGITUDE": "-87.62816"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    "-87.62816",
-                    "41.880537"
-                ]
-            }
-        },
-        {
-            "type": "Feature",
-            "id": 3910,
-            "properties": {
-                "NOV_DATE": "8/2/2020",
-                "NOV_NUM": "P005898203",
-                "STR_ADDRESS": "\"5500 S ST LOUIS \"",
-                "DESC": "\"8-4-081(a)     Public Urination\"",
-                "LATITUDE": "41.793254",
-                "LONGITUDE": "-87.710901"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    "-87.710901",
-                    "41.793254"
-                ]
-            }
-        },
-        {
-            "type": "Feature",
-            "id": 3911,
-            "properties": {
-                "NOV_DATE": "8/4/2020",
-                "NOV_NUM": "P005844810",
-                "STR_ADDRESS": "\"10 W 69TH ST \"",
-                "DESC": "\"8-4-081(a)     Public Urination\"",
-                "LATITUDE": "41.768994",
-                "LONGITUDE": "-87.625636"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    "-87.625636",
-                    "41.768994"
-                ]
-            }
         }
     ]
 }

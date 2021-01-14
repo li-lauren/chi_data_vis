@@ -53,9 +53,9 @@ body {
 }
 
 .ticket {
-    /* fill: yellow; */
     opacity: 0.6;
 }
+
 
 .tooltip {
     position: absolute;			
