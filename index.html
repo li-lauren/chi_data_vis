@@ -80,18 +80,23 @@
                     .attr("d", geoPath)
                     .attr("class", "ticket")
                     .on("mouseover", function(d) {
+                        // tooltip for displaying address on hover
                         tooltip.transition()
                             .duration(200)
                             .style("opacity", 0.9)
                             .style("left", d3.event.pageX + "px")
-                            .style("top", d3.event.pageY + 10 + "px")
-                        let address = d.properties.STR_ADDRESS
-                        tooltip.html(address.substring(1,address.length-1))
+                            .style("top", d3.event.pageY + 10 + "px");
+
+                        let address = d.properties.STR_ADDRESS;
+                        tooltip.html(address.substring(1,address.length-1));
+
+                        d3.select(this).attr("class", "ticket hover")
                     })
                     .on("mouseout", function(d) {
                         tooltip.transition()
                             .duration(500)
                             .style("opacity", 0);
+                        d3.select(this).attr("class", "ticket")
                     });
             });
         }
