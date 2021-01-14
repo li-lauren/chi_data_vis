@@ -9,12 +9,24 @@
 </head>
 <body>
     <div id="graphic-container">
-        <h3 id="graphic-h">Chicago Public Urination Tickets</h3>
+        <h3 id="graphic-h">Stay-At-Home, Pee-at-Home</h3>
+        <p id="graphic-sub-h">
+            The effect of the pandemic on public urination in Chicago
+        </p>
         <!-- Slider -->
         <div id="slide-container">
-            <input id="slide" type="range" min="1" max="7" value="0" step="1">
-            <br>
-            <span id="time-label">January</span>
+            <input id="slide" type="range" min="1" max="7" value="0" step=".025">
+            <div class="sliderticks">
+                <p>Jan</p>
+                <p>Feb</p>
+                <p>Mar</p>
+                <p>Apr</p>
+                <p>May</p>
+                <p>Jun</p>
+                <p>Jul</p>
+            </div>
+            <!-- <br>
+            <span id="time-label">January</span> -->
         </div>
 
         <!-- Map Containers -->
@@ -109,15 +121,11 @@
 
         
         // Update ticket color in response to time slide
-        d3.select("#slide").on("input", function() {
-            updateFill(this.value);
+        d3.select("#slide").on("mouseup", function() {
+            updateFill(Math.round(this.value));
         })
 
         function updateFill (val) {
-            console.log(val)
-            console.log(timeOpts[val-1])
-            document.getElementById("time-label").innerHTML=timeOpts[val-1];
-            
             timeValMonth = val;
             d3.selectAll(".ticket")
                 .attr("fill", getColor);
@@ -132,7 +140,6 @@
                 // helps make matches always appear in top layer
                 if (this.parentElement != null) {
                     this.parentElement.appendChild(this);
-                    console.log(month) 
                     return "red";
                 }
             } else {
@@ -146,7 +153,6 @@
 
             // 1 -> Jan 2019
             if (month == 1) {
-                console.log(month) 
                 this.parentElement.appendChild(this);
                 return "red";
             } else {
