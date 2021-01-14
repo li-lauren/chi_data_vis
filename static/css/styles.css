@@ -68,6 +68,16 @@ body {
     pointer-events: none;		
 }
 
+#source {
+    margin-top: 36px;
+    font-size: 12px;
+    align-self: flex-end;
+    margin-right: 180px;
+    padding: 2px;
+    border-bottom: #c4b6b6 1px solid;
+    color: #c4b6b6;
+}
+
 /* Slider Styling */
 /* Ref: https://stackoverflow.com/questions/33699852/show-tick-positions-in-custom-range-input */
 
